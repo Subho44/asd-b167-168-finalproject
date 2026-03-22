@@ -8,6 +8,7 @@ const dummyProducts = [
     image: "http://localhost:5600/images/iphone.jpg",
     description: "Latest Apple smartphone",
     price: 70000,
+    stock: 5
   },
   {
     _id: "2",
@@ -15,6 +16,7 @@ const dummyProducts = [
     image: "http://localhost:5600/images/samsung.jpg",
     description: "Powerful Android phone",
     price: 65000,
+    stock: 8
   },
   {
     _id: "3",
@@ -22,6 +24,7 @@ const dummyProducts = [
     image: "http://localhost:5600/images/laptop.jpg",
     description: "High performance laptop",
     price: 50000,
+    stock: 4
   },
   {
     _id: "4",
@@ -29,14 +32,24 @@ const dummyProducts = [
     image: "http://localhost:5600/images/headphone.jpg",
     description: "Wireless headphone",
     price: 3000,
-  },
+    stock: 10
+  }
 ];
 
+const fallbackImage =
+  "data:image/svg+xml;utf8," +
+  encodeURIComponent(`
+    <svg xmlns="http://www.w3.org/2000/svg" width="400" height="300">
+      <rect width="100%" height="100%" fill="#f1f3f5"/>
+      <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" fill="#6c757d" font-size="24">
+        No Image
+      </text>
+    </svg>
+  `);
 
-
-const getSafeCart = () => {
+const getSafeArray = (key) => {
   try {
-    const raw = localStorage.getItem("cartitems");
+    const raw = localStorage.getItem(key);
 
     if (!raw || raw === "undefined" || raw === "null") {
       return [];
@@ -45,7 +58,7 @@ const getSafeCart = () => {
     const parsed = JSON.parse(raw);
     return Array.isArray(parsed) ? parsed : [];
   } catch (error) {
-    console.log("Cart parse error:", error);
+    console.log(`${key} parse error:`, error);
     return [];
   }
 };
@@ -72,7 +85,7 @@ export default function Home() {
   };
 
   const addtocart = (product) => {
-    const existingcart = getSafeCart();
+    const existingcart = getSafeArray("cartitems");
     const findproduct = existingcart.find((item) => item._id === product._id);
 
     let updatedcart = [];
@@ -132,6 +145,7 @@ export default function Home() {
                   <h5>{item.name}</h5>
                   <p>{item.description}</p>
                   <h6>₹ {item.price}</h6>
+                  <p>Stock: {item.stock}</p>
 
                   <button
                     className="btn btn-primary btn-block mt-auto"

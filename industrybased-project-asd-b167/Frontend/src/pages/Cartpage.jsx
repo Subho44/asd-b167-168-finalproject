@@ -1,11 +1,20 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 
+const fallbackImage =
+  "data:image/svg+xml;utf8," +
+  encodeURIComponent(`
+    <svg xmlns="http://www.w3.org/2000/svg" width="400" height="300">
+      <rect width="100%" height="100%" fill="#f1f3f5"/>
+      <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" fill="#6c757d" font-size="24">
+        No Image
+      </text>
+    </svg>
+  `);
 
-
-const getSafeCart = () => {
+const getSafeArray = (key) => {
   try {
-    const raw = localStorage.getItem("cartitems");
+    const raw = localStorage.getItem(key);
 
     if (!raw || raw === "undefined" || raw === "null") {
       return [];
@@ -14,7 +23,7 @@ const getSafeCart = () => {
     const parsed = JSON.parse(raw);
     return Array.isArray(parsed) ? parsed : [];
   } catch (error) {
-    console.log("Cart parse error:", error);
+    console.log(`${key} parse error:`, error);
     return [];
   }
 };
@@ -23,7 +32,7 @@ const Cartpage = () => {
   const [cartitems, setCartitems] = useState([]);
 
   useEffect(() => {
-    const storecart = getSafeCart();
+    const storecart = getSafeArray("cartitems");
     setCartitems(storecart);
   }, []);
 
@@ -78,11 +87,14 @@ const Cartpage = () => {
               <div className="col-md-4 mb-4" key={item._id}>
                 <div className="card shadow-sm h-100">
                   <img
-                    src={item.image}
+                    src={item.image || fallbackImage}
                     className="card-img-top"
                     alt={item.name}
                     style={{ height: "200px", objectFit: "cover" }}
-                    
+                    onError={(e) => {
+                      e.target.onerror = null;
+                      e.target.src = fallbackImage;
+                    }}
                   />
 
                   <div className="card-body d-flex flex-column">
