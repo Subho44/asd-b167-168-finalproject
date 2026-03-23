@@ -5,7 +5,7 @@ const connectdb = require('./config/db');
 const productroutes = require("./routes/productRoutes");
 const orderroutes = require("./routes/orderRoutes");
 const cartroutes = require("./routes/cartRoutes");
-
+const authroutes = require("./routes/authRoutes");
 dotenv.config();
 connectdb();
 const app = express();
@@ -14,6 +14,7 @@ app.use(express.json());
 app.use("/api/products",productroutes);
 app.use("/api/cart",cartroutes);
 app.use("/api/orders",orderroutes);
+app.use("/api/auth",authroutes);
 
 app.get("/",(req,res)=>{
     res.send("API IS WORKING...");

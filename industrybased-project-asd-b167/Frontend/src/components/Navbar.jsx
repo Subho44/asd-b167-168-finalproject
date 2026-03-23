@@ -1,19 +1,34 @@
 import React from 'react'
-import { Link } from "react-router-dom";
-const Navbar = () => {
+import { Link,useNavigate } from "react-router-dom";
 
+const Navbar = () => {
+ const navigate = useNavigate();
+ const token = localStorage.getItem("token");
+ const hl = ()=>{
+  localStorage.removeItem('token');
+  navigate("/login");
+ }
 
   return <>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
-      <Link class="navbar-brand" to="/">Amazon Clone</Link>
+      <Link class="navbar-brand" to="/home">Amazon Clone</Link>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
 
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto">
-          <li class="nav-item active">
-            <Link class="nav-link" to="/">Home <span class="sr-only">(current)</span></Link>
+           <li class="nav-item">
+            <Link class="nav-link" to="/">Register</Link>
+          </li>
+           <li class="nav-item">
+            <Link class="nav-link" to="/login">Login</Link>
+          </li>
+          {
+            token && (
+              <>
+               <li class="nav-item active">
+            <Link class="nav-link" to="/home">Home <span class="sr-only">(current)</span></Link>
           </li>
           <li class="nav-item">
             <Link class="nav-link" to="/cart">Cart</Link>
@@ -38,6 +53,12 @@ const Navbar = () => {
           <li class="nav-item">
             <a class="nav-link disabled">Disabled</a>
           </li>
+          <button onClick={hl} className='btn btn-danger btn-sm'>Logut</button>
+              
+              
+              </>
+            )
+          }
         </ul>
         <form class="form-inline my-2 my-lg-0">
           <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" />
