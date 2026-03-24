@@ -10,7 +10,7 @@ dotenv.config();
 connectdb();
 const app = express();
 app.use(express.json());
-
+app.use(cors());
 app.use("/api/products",productroutes);
 app.use("/api/cart",cartroutes);
 app.use("/api/orders",orderroutes);
